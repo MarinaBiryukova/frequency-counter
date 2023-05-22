@@ -33,6 +33,6 @@ func main() {
 	}
 	caser := cases.Title(language.Russian)
 	for key, value := range result {
-		fmt.Println(fmt.Sprintf("%s: %d", caser.String(key), value))
+		fmt.Printf("%s: %d\n", caser.String(key), value)
 	}
 }
