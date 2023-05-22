@@ -2,18 +2,21 @@ package main
 
 import (
 	"flag"
-	"frequency_counter/pkg/util"
+	"fmt"
+	"frequency_counter/internal/util"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 	"log"
 	"os"
 )
 
 func main() {
-	filename := flag.String("file", "", "Name of input file")
+	filename := flag.String("file", "", "Path to input file")
 	flag.Parse()
 	if len(*filename) == 0 {
-		log.Fatal("Name of input file is not specified")
+		log.Fatal("Path to input file is not specified")
 	}
-	file, err := os.Open("resources/" + *filename)
+	file, err := os.Open(*filename)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -24,8 +27,12 @@ func main() {
 		}
 	}(file)
 
-	result := util.CountFrequency(file)
+	result, err := util.CountFrequency(file)
+	if err != nil {
+		log.Fatal(err)
+	}
+	caser := cases.Title(language.Russian)
 	for key, value := range result {
-		util.PrettyPrint(key, value)
+		fmt.Println(fmt.Sprintf("%s: %d", caser.String(key), value))
 	}
 }
