@@ -8,6 +8,7 @@ import (
 	"golang.org/x/text/language"
 	"log"
 	"os"
+	"sort"
 )
 
 func main() {
@@ -27,12 +28,16 @@ func main() {
 		}
 	}(file)
 
-	result, err := util.CountFrequency(file)
+	resultMap, err := util.CountFrequency(file)
 	if err != nil {
 		log.Fatal(err)
 	}
+	resultSlice := util.MapToSlice(resultMap)
+	sort.Slice(resultSlice, func(i, j int) bool {
+		return resultSlice[i].Value > resultSlice[j].Value
+	})
 	caser := cases.Title(language.Russian)
-	for key, value := range result {
-		fmt.Printf("%s: %d\n", caser.String(key), value)
+	for _, x := range resultSlice {
+		fmt.Printf("%s: %d\n", caser.String(x.Key), x.Value)
 	}
 }
